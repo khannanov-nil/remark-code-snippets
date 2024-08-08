@@ -110,7 +110,7 @@ function getSnippet(fileContent: string, args: { start: any; file: any; end: any
 
   let joinedResult = removeCommonIndentation(lines).join('\n');
 
-  return retrieveExactSnippet(joinedResult).slice(0, -2);
+  return retrieveExactSnippet(joinedResult).slice(0, -1);
 }
 
 function retrieveExactSnippet(snippet: string): string {
@@ -120,8 +120,8 @@ function retrieveExactSnippet(snippet: string): string {
   if (cli_match != null) {
     let result = cli_match[0];
     const ARGS_PATTERN = /\$\{([^}]+)\}/g;
-    const resultString = result.replace(ARGS_PATTERN, (match, s) => s.toUpperCase().replace(/'/g, ""));
-    return resultString;
+    const resultString = result.replace(ARGS_PATTERN, (match, s) => s.toUpperCase());
+    return resultString.replace(/'/g, "");
   }
   else {
     return snippet;
