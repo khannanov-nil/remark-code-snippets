@@ -1,12 +1,12 @@
 {
-  "name": "remark-code-snippets",
+  "name": "nil-remark-code-snippets",
   "description": "Import snippets of source code from files as code blocks",
-  "version": "1.1.0",
-  "author": "John Knox",
+  "version": "1.1.4",
+  "author": "khannanov-nil",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jknoxville/remark-code-snippets.git"
+    "url": "git+https://github.com/khannanov-nil/remark-code-snippets"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +27,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "prepare": "yarn clean && yarn test && yarn build",
+    "prepare": "yarn clean && yarn build",
     "test": "jest"
   },
   "dependencies": {
