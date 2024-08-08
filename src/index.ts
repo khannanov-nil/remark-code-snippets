@@ -114,18 +114,23 @@ function getSnippet(fileContent: string, args: { start: any; file: any; end: any
 }
 
 function retrieveExactSnippet(snippet: string): string {
-  const CLI_PATTERN = /nil .*/;
-
-  const cli_match = snippet.match(CLI_PATTERN);
-  if (cli_match != null) {
-    let result = cli_match[0];
+  const PATTERN = /(nil |solc )/;
+  const match = snippet.match(PATTERN);
+  if (match != null) {
+    let result = match[0];
     const ARGS_PATTERN = /\$\{([^}]+)\}/g;
     const resultString = result.replace(ARGS_PATTERN, (match, s) => s.toUpperCase());
-    return resultString.replace(/['`]/g, "");
+    return handlePathing(resultString.replace(/['`]/g, ""));
   }
   else {
     return snippet;
   }
+}
+
+function handlePathing(snippet: string): string {
+  const PATTERN = /(\S*\/)(\S+)/g;
+  let resultString = snippet.replace(PATTERN, (match, p1, p2) => `path/to/${p2}`);
+  return resultString;
 }
 
 function removeCommonIndentation(lines: string[]): string[] {
