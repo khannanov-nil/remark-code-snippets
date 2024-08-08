@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import visit from 'unist-util-visit';
-import {Node, Parent} from 'unist';
-import {Transformer} from 'unified';
-const {parseArgs} = require('./arguments');
+import { Node, Parent } from 'unist';
+import { Transformer } from 'unified';
+const { parseArgs } = require('./arguments');
 
 const referencedFiles = new Set<string>();
 
@@ -73,7 +73,7 @@ export default function codeImport(options: Options = {}): Transformer {
     }
 
     if (promises.length) {
-      return Promise.all(promises).then(() => {});
+      return Promise.all(promises).then(() => { });
     }
   };
 }
@@ -108,7 +108,24 @@ function getSnippet(fileContent: string, args: { start: any; file: any; end: any
 
   lines = lines.slice(startingLine, endingLine);
 
-  return removeCommonIndentation(lines).join('\n');
+  let joinedResult = removeCommonIndentation(lines).join('\n');
+
+  return retrieveExactSnippet(joinedResult);
+}
+
+function retrieveExactSnippet(snippet: string): string {
+  const CLI_PATTERN = /nil_cli .*/;
+
+  const cli_match = snippet.match(CLI_PATTERN);
+  if (cli_match != null) {
+    let result = cli_match[0];
+    const ARGS_PATTERN = /\$\{([^}]+)\}/g;
+    const resultString = result.replace(ARGS_PATTERN, (match, s) => s.toUpperCase());
+    return resultString;
+  }
+  else {
+    return snippet;
+  }
 }
 
 function removeCommonIndentation(lines: string[]): string[] {
@@ -137,7 +154,7 @@ function getLineNumbersOfOccurrence(lines: string[], searchTerm: string) {
   return lineNumbers;
 }
 
-function hasLang(node: Node): node is Node & {lang: string} {
+function hasLang(node: Node): node is Node & { lang: string } {
   return Boolean(node.lang) && typeof node.lang === 'string';
 }
 
