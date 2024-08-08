@@ -120,8 +120,8 @@ function retrieveExactSnippet(snippet: string): string {
   if (cli_match != null) {
     let result = cli_match[0];
     const ARGS_PATTERN = /\$\{([^}]+)\}/g;
-    const resultString = result.replace(ARGS_PATTERN, (match, s) => s.toUpperCase());
-    return resultString.slice(1, -1);
+    const resultString = result.replace(ARGS_PATTERN, (match, s) => s.toUpperCase().replace(/'/g, ""));
+    return resultString;
   }
   else {
     return snippet;
