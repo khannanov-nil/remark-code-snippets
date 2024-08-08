@@ -116,13 +116,20 @@ function getSnippet(fileContent: string, args: { start: any; file: any; end: any
 function retrieveExactSnippet(snippet: string): string {
   const PATTERN = /(nil |solc )/;
   const match = snippet.match(PATTERN);
+
   if (match != null) {
-    let result = match[0];
+    const startIndex = match.index || 0;
+
+    let resultString = snippet.substring(startIndex);
+
     const ARGS_PATTERN = /\$\{([^}]+)\}/g;
-    const resultString = result.replace(ARGS_PATTERN, (match, s) => s.toUpperCase());
-    return handlePathing(resultString.replace(/['`]/g, ""));
-  }
-  else {
+    resultString = resultString.replace(ARGS_PATTERN, (match, s) => s.toUpperCase())
+      .replace(/['`]/g, "");
+
+    resultString = handlePathing(resultString);
+
+    return resultString;
+  } else {
     return snippet;
   }
 }
