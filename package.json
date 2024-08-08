@@ -1,7 +1,7 @@
 {
   "name": "nil-remark-code-snippets",
   "description": "Import snippets of source code from files as code blocks",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "author": "khannanov-nil",
   "license": "MIT",
   "repository": {
