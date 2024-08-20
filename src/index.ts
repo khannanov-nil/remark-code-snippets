@@ -128,7 +128,7 @@ function retrieveExactSnippet(snippet: string): string {
       return s === 'NIL_GLOBAL' ? 'nil' : s.toUpperCase();
     });
 
-    resultString = resultString.replace(CONFIG_PATTERN, '');
+    resultString = resultString.replace(CONFIG_PATTERN, '').replace(/['`]/g, "");;
 
     resultString = handlePathing(resultString);
 
