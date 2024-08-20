@@ -124,8 +124,12 @@ function retrieveExactSnippet(snippet: string): string {
     let resultString = snippet.substring(startIndex);
 
     const ARGS_PATTERN = /\$\{([^}]+)\}/g;
-    resultString = resultString.replace(ARGS_PATTERN, (match, s) => s.toUpperCase())
-      .replace(/['`]/g, "");
+    resultString = resultString
+      .replace(/\$\{NIL_GLOBAL\}/g, 'nil')
+      .replace(ARGS_PATTERN, (fullMatch, s) => {
+        return s === 'NIL_GLOBAL' ? 'nil' : s.toUpperCase();
+      })
+      .replace(/['`]/g, "");  // Remove single and backticks
     resultString = resultString.replace(CONFIG_PATTERN, '');
 
     resultString = handlePathing(resultString);
