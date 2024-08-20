@@ -24,9 +24,6 @@ export default function codeImport(options: Options = {}): Transformer {
 
     for (const [node] of codes) {
 
-      // If someone tries to import a file, but forgets to add a language tag e.g ```json
-      // then the meta string will be interpreted as the language. So check the lang prop for file=
-      // and show a helpful error if this is the case, or else importing wont work for them.
       if (hasLang(node) && node.lang.startsWith('file=')) {
         throw new Error(`Language tag missing on code block snippet in ${file.history}`)
       }
@@ -114,8 +111,10 @@ function getSnippet(fileContent: string, args: { start: any; file: any; end: any
 }
 
 function retrieveExactSnippet(snippet: string): string {
-  const CLI_PATTERN = /(nil |solc )/;
+  const CLI_PATTERN = /\$\{NIL_GLOBAL\}|solc/;
   const CONFIG_PATTERN = /--config\s+\S+/g;
+  const ARGS_PATTERN = /\$\{([^}]+)\}/g;
+
   const match = snippet.match(CLI_PATTERN);
 
   if (match != null) {
@@ -123,13 +122,12 @@ function retrieveExactSnippet(snippet: string): string {
 
     let resultString = snippet.substring(startIndex);
 
-    const ARGS_PATTERN = /\$\{([^}]+)\}/g;
-    resultString = resultString
-      .replace(/\$\{NIL_GLOBAL\}/g, 'nil')
-      .replace(ARGS_PATTERN, (fullMatch, s) => {
-        return s === 'NIL_GLOBAL' ? 'nil' : s.toUpperCase();
-      })
-      .replace(/['`]/g, "");  // Remove single and backticks
+    resultString = resultString.replace(/\$\{NIL_GLOBAL\}/g, 'nil');
+
+    resultString = resultString.replace(ARGS_PATTERN, (fullMatch, s) => {
+      return s === 'NIL_GLOBAL' ? 'nil' : s.toUpperCase();
+    });
+
     resultString = resultString.replace(CONFIG_PATTERN, '');
 
     resultString = handlePathing(resultString);
