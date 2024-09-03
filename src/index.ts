@@ -103,11 +103,12 @@ function getSnippet(fileContent: string, args: { start: any; file: any; end: any
     endingLine = numbers[0];
   }
 
-  lines = lines.slice(startingLine, endingLine);
+  lines = lines.slice(startingLine, endingLine! + 1);
 
   let joinedResult = removeCommonIndentation(lines).join('\n');
 
-  return retrieveExactSnippet(joinedResult).slice(0, -1);
+  return retrieveExactSnippet(joinedResult);
+
 }
 
 function retrieveExactSnippet(snippet: string): string {
@@ -124,13 +125,14 @@ function retrieveExactSnippet(snippet: string): string {
 
     resultString = resultString.replace(/\$\{NIL_GLOBAL\}/g, 'nil');
 
+    resultString = resultString.replace(CONFIG_PATTERN, '').replace(/['`]/g, "");
+
     resultString = resultString.replace(ARGS_PATTERN, (fullMatch, s) => {
       return s === 'NIL_GLOBAL' ? 'nil' : s.toUpperCase();
     });
 
-    resultString = resultString.replace(CONFIG_PATTERN, '').replace(/['`]/g, "");;
 
-    resultString = handlePathing(resultString);
+    resultString = handlePathing(resultString).replace(/CONFIG_FLAG/, '').trim().replace(';', '');
 
     return resultString;
   } else {
