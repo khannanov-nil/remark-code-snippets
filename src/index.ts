@@ -105,7 +105,7 @@ function getSnippet(fileContent: string, args: { start: any; file: any; end: any
 
   lines = lines.slice(startingLine, endingLine! + 1);
 
-  let joinedResult = removeCommonIndentation(lines).join('\n');
+  let joinedResult = removeCommonIndentation(lines.slice(0, -1)).join('\n');
 
   return retrieveExactSnippet(joinedResult);
 
@@ -132,7 +132,7 @@ function retrieveExactSnippet(snippet: string): string {
     });
 
 
-    resultString = handlePathing(resultString).replace(/CONFIG_FLAG/, '').trim().replace(';', '');
+    resultString = handlePathing(resultString).replace(/CONFIG_FLAG/, '').trim().replace(';', '').replace('NODE_MODULES', '');
 
     return resultString;
   } else {
