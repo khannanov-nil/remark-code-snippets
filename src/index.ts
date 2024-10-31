@@ -127,6 +127,8 @@ function retrieveExactSnippet(snippet: string): string {
 
     resultString = resultString.replace(CONFIG_PATTERN, '').replace(/['`]/g, "");
 
+    resultString = resultString.replace(/process.env.SOLC/, 'solc');
+
     resultString = resultString.replace(ARGS_PATTERN, (fullMatch, s) => {
       return s === 'NIL_GLOBAL' ? 'nil' : s.toUpperCase();
     });
